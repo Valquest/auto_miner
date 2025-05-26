@@ -2,25 +2,34 @@ import pyautogui
 import time
 import random
 
+mining_tab_image_path = "C:\\Users\\Dovyd\\Coding\\auto_miner\\screenshots\\ore_finder\\mining_tab.png"
+warp_image_path = "C:\\Users\\Dovyd\\Coding\\auto_miner\\screenshots\\ore_finder\\warp_to_within.png"
+home_path = "C:\\Users\\Dovyd\\Coding\\auto_miner\\screenshots\\ore_finder\\home.png"
+
 def mine():
-    image_path = "C:\\Users\\Dovyd\\Coding\\auto_miner\\screenshots\\ore_finder\\mining_tab.png"
-    warp_image_path = "C:\\Users\\Dovyd\\Coding\\auto_miner\\screenshots\\ore_finder\\warp_to_within.png"
-    home_path = "C:\\Users\\Dovyd\\Coding\\auto_miner\\screenshots\\ore_finder\\home.png"
     random_num = round(random.randint(3, 5))
     time.sleep(1)
     print("Locating")
-    x, y = pyautogui.locateCenterOnScreen(image_path, confidence=0.85)
+    x, y = pyautogui.locateCenterOnScreen(mining_tab_image_path, confidence=0.85)
     print("Moving mouse")
     pyautogui.moveTo(x, y, duration=random_num)
     time.sleep(0.5)
     pyautogui.move(0, 50, duration=0.5)
-    time.sleep
+    time.sleep(1)
     pyautogui.rightClick()
     time.sleep(1)
     x, y = pyautogui.locateCenterOnScreen(warp_image_path, confidence=0.85)
     pyautogui.click(x + random_num, y, duration=0.5)
     time.sleep(2)
-    time.sleep(17)
+    time.sleep(20)
+    x, y = pyautogui.locateCenterOnScreen(mining_tab_image_path, confidence=0.85)
+    print("Moving mouse")
+    pyautogui.moveTo(x, y, duration=random_num)
+    time.sleep(0.5)
+    pyautogui.move(0, 50, duration=0.5)
+    time.sleep(1)
+    pyautogui.click()
+    time.sleep(1)
     pyautogui.press("ctrl")
     time.sleep(2.5)
     pyautogui.press("f1")
@@ -48,4 +57,22 @@ def mine():
     pyautogui.moveTo(x + random_num, y, duration=0.5)
     time.sleep(0.5)
     pyautogui.click()
-    time.sleep(17)
+    time.sleep(20)
+
+def random_movement(points=1):
+    """
+    Adds random movement that do not add value to automation, but
+    mimics more random human like behavior.
+    args:
+        points: Number of different points mouse should visit
+    return: 
+        None
+    """
+    screen_width = 1900
+    screen_height = 1000
+
+    for point in points:
+        print(f"Visiting random point #:{point}")
+        rand_x = round(random.randint(0,screen_width))
+        rand_y = round(random.randint(0,screen_height))
+        pyautogui.moveTo(rand_x, rand_y, duration=0.5)
