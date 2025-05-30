@@ -89,18 +89,15 @@ def mine()-> None:
     asteroid_depleted_img_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\depleted.png"
     while timer < 900: #865
         if asteroid_depleted:
-            # Turn off both lasers. If one of them is still on, nothing wrong
-            # happens
+            
+            # Turn off both lasers. If one of them is still on, nothing wrong happens
             pyautogui.press("f1")
             pyautogui.press("f2")
 
             approach_closest_asteroid()
-            # Allow lasers that are still cached on old asteroid to run out and
-            # realise they are not mining anything
-            time.sleep(20)
+
             mining_lasers_on()
-            # Increase mining timer by 20 seconds to account for traveling time
-            timer -= 20
+
             asteroid_depleted = False
         try:
             coords = pyautogui.locateCenterOnScreen(asteroid_depleted_img_path, confidence=0.7)
@@ -138,7 +135,7 @@ def approach_closest_asteroid():
     pyautogui.press("f2")
     pyautogui.keyUp("alt")
 
-    time.sleep(3)
+    time.sleep(10)
 
     # Turn off boosters
     pyautogui.keyDown("alt")
@@ -190,24 +187,22 @@ def traveling()-> None:
     """
     Minimises idle time when ship is traveling in between asteroids
     """
-    APPROACH_TIME = 40
+    APPROACH_TIME = 60
+    counter = 0
 
     # Initial wait before flying speed is appearing on the screen
     time.sleep(3)
 
-    small_distance_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Small_Distance_Large_Num.png"
+    target_image = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Target_Locked_In.png"
 
-    # Delay for ship to warp to an asteroid
-    is_warping_check = 0
-
-    while is_warping_check < APPROACH_TIME:
+    while counter < APPROACH_TIME:
         try:
-            target_close = pyautogui.locateOnScreen(small_distance_img, confidence=0.85)
-            if target_close:
+            targeted = pyautogui.locateOnScreen(target_image, confidence=0.90)
+            if targeted:
                 break
         except:
-            time.sleep(0.1)
-            is_warping_check += 1
-            pass
+            time.sleep(1)
+            pyautogui.press('ctrl')
+            counter += 1
 
     print("Next asteroid reached")
