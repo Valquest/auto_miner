@@ -4,8 +4,9 @@ import random
 
 if __name__ == "__main__":
     while True:
+        time.sleep(4)
         sleep_checker = 0
-        ore_finder.mine()
+        ore_finder.excavate()
         inv_mover.move()
         if sleep_checker / 8 == 1:
             random_sleep_time = round(random.randint(500, 1500))

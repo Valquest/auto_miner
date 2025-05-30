@@ -1,3 +1,7 @@
+"""
+Used as a utility tool for development. Allows me to find specific coordinates on where my mouse is, when I click space bar
+"""
+
 from pynput import keyboard, mouse
 import pyautogui
 
