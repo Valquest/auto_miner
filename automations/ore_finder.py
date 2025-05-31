@@ -18,10 +18,6 @@ def excavate():
     mouse_action(warp_image_path, "click", offset_x=round(random.randint(1, 60)), 
               offset_y=round(random.randint(1, 3)))
 
-    # Additional click on any of the asteroids in case refinery is selected
-    # since refinery has word "mining" in it title, which disturbs following actions
-    mouse_action(mining_tab_image_path, "click", offset_y=50, confidence=0.95)
-
     warp()
 
     # Locate asteroid to mine again (in case it was not marked the first time 
@@ -120,7 +116,7 @@ def mine()-> None:
 
 def approach_closest_asteroid():
     # Select first asteroid form the summary console
-    mouse_action(mining_tab_image_path, "click", offset_y=50)
+    mouse_action(mining_tab_image_path, "click", offset_y=50, confidence=0.95)
 
     # Approach asteroid by using keyboard shortcuts
     pyautogui.press("q")
