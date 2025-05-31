@@ -89,8 +89,6 @@ def mine()-> None:
     asteroid_depleted_img_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\depleted.png"
     while timer < 900: #865
         if asteroid_depleted:
-            
-            # Turn off both lasers. If one of them is still on, nothing wrong happens
 
             # Turn off both lasers. If one of them is still on, nothing wrong happens
             pyautogui.press("f1")
@@ -161,7 +159,7 @@ def warp()-> None:
     """
     WARP_TIME = 40
 
-    warping_text = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\warping2.png"
+    warping_text = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Warping_text.png"
 
     # Initial delay for warp indicators to kick in on the screen
     time.sleep(5)
@@ -179,7 +177,7 @@ def warp()-> None:
         time.sleep(3)
         is_warping_check += 1
 
-    time.sleep(5)
+    time.sleep(2)
 
     print("Warping completed")
 
@@ -193,15 +191,24 @@ def traveling()-> None:
     # Initial wait before flying speed is appearing on the screen
     time.sleep(10)
 
-    target_image = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Target_Locked_In.png"
+    target_image_bigger = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Target_Locked_In_Bigger.png"
+    target_image_smaller = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Target_Locked_In_Smaller.png"
 
     while counter < APPROACH_TIME:
         try:
-            targeted = pyautogui.locateOnScreen(target_image, confidence=0.90)
+            targeted = pyautogui.locateOnScreen(target_image_bigger, confidence=0.90)
             if targeted:
                 break
+            try:
+                target = pyautogui.locateOnScreen(target_image_smaller, confidence=0.90)
+                if target:
+                    break
+            except:
+                time.sleep(2)
+                pyautogui.press('ctrl')
+                counter += 1
         except:
-            time.sleep(1)
+            time.sleep(2)
             pyautogui.press('ctrl')
             counter += 1
 
