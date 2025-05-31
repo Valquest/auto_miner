@@ -151,18 +151,22 @@ def mining_lasers_on():
             pyautogui.press("f1")
             time.sleep(0.5)
             pyautogui.press("f2")
-            both_mining = pyautogui.locateCenterOnScreen(both_mining, confidence=0.85)
-            if both_mining:
-                break
-
-            mouse_action(mining_laser, "click", rand_moves=0)
-            time.sleep(2)
-            pyautogui.press("f1")
-            time.sleep(0.5)
-            pyautogui.press("f2")
-            both_mining = pyautogui.locateCenterOnScreen(both_mining, confidence=0.85)
-            if both_mining:
-                break
+            try:
+                both_mining = pyautogui.locateCenterOnScreen(both_mining, confidence=0.85)
+                if both_mining:
+                    break
+            except:
+                mouse_action(mining_laser, "click", rand_moves=0)
+                time.sleep(2)
+                pyautogui.press("f1")
+                time.sleep(0.5)
+                pyautogui.press("f2")
+                try:
+                    both_mining = pyautogui.locateCenterOnScreen(both_mining, confidence=0.85)
+                    if both_mining:
+                        break
+                except:
+                    pass
 
     # Locking in target and starting lasers
     pyautogui.press("ctrl")
@@ -180,19 +184,27 @@ def warp()-> None:
 
     warping_text = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Warping_text.png"
 
-    # Initial delay for warp indicators to kick in on the screen
-    time.sleep(10)
+    time.sleep(5)
+
+    while True:
+        try:
+            found_warp_text = pyautogui.locateCenterOnScreen(warping_text, confidence=0.90)
+            if found_warp_text:
+                print("Warp drive active")
+                break
+        except:
+            time.sleep(1)
 
     # Delay for ship to warp to an asteroid
     is_warping_check = 0
 
     while is_warping_check < WARP_TIME:
         try:
-            warping = pyautogui.locateOnScreen(warping_text, confidence=0.90)    
+            warping = pyautogui.locateOnScreen(warping_text, confidence=0.80)    
             if warping:
                 continue
         except:
-                break
+            break
 
         time.sleep(3)
         is_warping_check += 1

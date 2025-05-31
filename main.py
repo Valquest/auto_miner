@@ -18,6 +18,10 @@ if __name__ == "__main__":
                 sleep_checker = 0
             else:
                 sleep_checker += 1
+        except ImageNotFoundException as e:
+            time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            print(f"Faced an exception on {time}. \nError:{e}")
+            break
         except Exception as e:
             time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             print(f"Faced an exception on {time}. \nError:{e}")
