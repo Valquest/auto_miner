@@ -89,6 +89,8 @@ def mine()-> None:
     asteroid_depleted_img_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\depleted.png"
     while timer < 900: #865
         if asteroid_depleted:
+            
+            # Turn off both lasers. If one of them is still on, nothing wrong happens
 
             # Turn off both lasers. If one of them is still on, nothing wrong happens
             pyautogui.press("f1")
