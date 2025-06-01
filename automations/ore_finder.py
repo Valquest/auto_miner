@@ -138,35 +138,28 @@ def approach_closest_asteroid():
 
 def mining_lasers_on():
 
-    both_mining = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Both_mining.png"
-    mining_laser = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\mining_laser.png"
+    pyautogui.press("f1")
+    time.sleep(1)
+    pyautogui.press("f2")
+    time.sleep(10)
 
-    
+    mining_laser = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\mining_laser_starting_point.png"
+    x = -100
+    y = 50
+
     while True:
         try:
-            both_mining = pyautogui.locateCenterOnScreen(both_mining, confidence=0.85)
-            if both_mining:
-                break
+            mouse_action(mining_laser, "click", rand_moves=0, offset_x=x, offset_y=y)
+            time.sleep(1)
+            mouse_action(mining_laser, "click", rand_moves=0, offset_x=x, offset_y=y)
+            break
         except:
-            pyautogui.press("f1")
-            time.sleep(0.5)
-            pyautogui.press("f2")
-            try:
-                both_mining = pyautogui.locateCenterOnScreen(both_mining, confidence=0.85)
-                if both_mining:
-                    break
-            except:
-                mouse_action(mining_laser, "click", rand_moves=0)
-                time.sleep(2)
-                pyautogui.press("f1")
-                time.sleep(0.5)
-                pyautogui.press("f2")
-                try:
-                    both_mining = pyautogui.locateCenterOnScreen(both_mining, confidence=0.85)
-                    if both_mining:
-                        break
-                except:
-                    pass
+            print("No lasers on")
+            break
+
+    # Reselect asteroid in case some other was selected while function tried to turn off lasers
+    # and none where on
+    mouse_action(mining_tab_image_path, "click", offset_y=50, confidence=0.95)
 
     # Locking in target and starting lasers
     pyautogui.press("ctrl")
@@ -181,14 +174,13 @@ def warp()-> None:
     ship would wait till general time.sleep would end for short warps
     """
     WARP_TIME = 40
+    warp_ended_approval = 0
 
     warping_text = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Warping_text.png"
 
-    time.sleep(5)
-
     while True:
         try:
-            found_warp_text = pyautogui.locateCenterOnScreen(warping_text, confidence=0.90)
+            found_warp_text = pyautogui.locateCenterOnScreen(warping_text, confidence=0.75)
             if found_warp_text:
                 print("Warp drive active")
                 break
@@ -200,16 +192,17 @@ def warp()-> None:
 
     while is_warping_check < WARP_TIME:
         try:
-            warping = pyautogui.locateOnScreen(warping_text, confidence=0.80)    
+            warping = pyautogui.locateOnScreen(warping_text, confidence=0.75)    
             if warping:
                 continue
         except:
-            break
+            time.sleep(1)
+            is_warping_check += 1
+            warp_ended_approval += 1
+            if warp_ended_approval == 3:
+                break
 
-        time.sleep(3)
-        is_warping_check += 1
-
-    time.sleep(2)
+    time.sleep(5)
 
     print("Warping completed")
 
@@ -231,6 +224,7 @@ def traveling()-> None:
             targeted = pyautogui.locateOnScreen(target_image_bigger, confidence=0.90)
             if targeted:
                 break
+        except:
             try:
                 target = pyautogui.locateOnScreen(target_image_smaller, confidence=0.90)
                 if target:
@@ -239,9 +233,5 @@ def traveling()-> None:
                 time.sleep(2)
                 pyautogui.press('ctrl')
                 counter += 1
-        except:
-            time.sleep(2)
-            pyautogui.press('ctrl')
-            counter += 1
 
     print("Next asteroid reached")
