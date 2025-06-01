@@ -1,17 +1,18 @@
 import pyautogui
 import time
 import random
-from automations import ore_finder
+from automations import ore_finder, idling
 from config import config
 
-def move():
+def items_to_refinery():
+
     time.sleep(2)
 
     refinery_img_path = f"{config.root_path}\\auto_miner\\screenshots\\general\\refinery.png"
 
     ore_finder.mouse_action(refinery_img_path, "rightClick")
 
-    open_cargo_img_path = f"{config.root_path}\\auto_miner\\screenshots\\inv_mover\\open_cargo.png"
+    open_cargo_img_path = f"{config.root_path}\\auto_miner\\screenshots\\general\\open_cargo.png"
     ore_finder.mouse_action(open_cargo_img_path, "click")
 
     # Define mining hold image path

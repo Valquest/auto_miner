@@ -1,16 +1,20 @@
-from automations import ore_finder, inv_mover
+from automations import ore_finder, inv_mover, idling
 import time
 import random
 from pyautogui import ImageNotFoundException
 from datetime import datetime
 
 if __name__ == "__main__":
+
+    # Create a idle tracker
+    idler = idling.Idler()
+
     while True:
         try:
             time.sleep(4)
             sleep_checker = 0
-            ore_finder.excavate()
-            inv_mover.move()
+            ore_finder.mine()
+            inv_mover.items_to_refinery()
             if sleep_checker / 8 == 1:
                 random_sleep_time = round(random.randint(500, 1500))
                 print("Starting long sleep: {random_sleep_time} seconds")

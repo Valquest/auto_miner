@@ -11,7 +11,7 @@ warping_text = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\warpin
 mining_completed_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Mining_Completed.png"
 
 
-def excavate():
+def mine():
 
     mouse_action(asteroid_belt_img_path, "rightClick")
 
@@ -24,7 +24,7 @@ def excavate():
     # as targeting only works if is marked in Overview window)
     approach_closest_asteroid()
 
-    mine()
+    mine_in_asteroid_belt()
 
     # Return home
     mouse_action(home_path, "rightClick", offset_x=round(random.randint(1,80)), offset_y=round(random.randint(1,5)))
@@ -71,7 +71,7 @@ def mouse_action(img:str, click_type:str, offset_x:int=0, offset_y:int=0, rand_m
 
     time.sleep(random_delay)
 
-def mine()-> None:
+def mine_in_asteroid_belt()-> None:
     """ 
     Start mining, check if asteroid is depleted if so, find another one to mind, when
     timer is done head back to offload
