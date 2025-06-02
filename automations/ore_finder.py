@@ -2,6 +2,7 @@ import pyautogui
 import time
 import random
 from config import config
+from pyautogui import ImageNotFoundException
 
 mining_tab_image_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\mining_tab.png"
 warp_image_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\warp_to_within.png"
@@ -54,20 +55,30 @@ def random_movement(points:int=1)-> None:
 def mouse_action(img:str, click_type:str, offset_x:int=0, offset_y:int=0, rand_moves=3, confidence=0.85)-> None:
     random_delay = round(random.uniform(0.5, 1))
     random_number_of_random_movements = random.randint(0, rand_moves)
-    random_movement(random_number_of_random_movements)
-    x, y = pyautogui.locateCenterOnScreen(img, confidence=confidence)
-    x += offset_x
-    y += offset_y
-    print(f"Moving mouse to: \"{img}\" image")
-    pyautogui.moveTo(x, y, duration=random_delay, tween=pyautogui.easeInOutQuad)
-    time.sleep(random_delay)
-    match click_type:
-        case "click":
-            pyautogui.click()
-        case "rightClick":
-            pyautogui.rightClick()
-        case "move":
-            return
+    try:
+        random_movement(random_number_of_random_movements)
+        x, y = pyautogui.locateCenterOnScreen(img, confidence=confidence)
+        x += offset_x
+        y += offset_y
+        print(f"Moving mouse to: \"{img}\" image")
+        pyautogui.moveTo(x, y, duration=random_delay, tween=pyautogui.easeInOutQuad)
+        time.sleep(random_delay)
+        match click_type:
+            case "click":
+                pyautogui.click()
+            case "rightClick":
+                pyautogui.rightClick()
+            case "move":
+                return
+            case _:
+                return
+    except ImageNotFoundException as e:
+        print(f"error: {e}")
+        try:
+            pyautogui.screenshot(f"{config.root_path}\\auto_miner\\error_screenshots\\screenshot.png")
+        except:
+            print("Failed capturing a screenshot")
+    
 
     time.sleep(random_delay)
 
@@ -138,24 +149,7 @@ def approach_closest_asteroid():
 
 def mining_lasers_on():
 
-    pyautogui.press("f1")
-    time.sleep(1)
-    pyautogui.press("f2")
-    time.sleep(10)
-
-    mining_laser = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\mining_laser_starting_point.png"
-    x = -100
-    y = 50
-
-    while True:
-        try:
-            mouse_action(mining_laser, "click", rand_moves=0, offset_x=x, offset_y=y)
-            time.sleep(1)
-            mouse_action(mining_laser, "click", rand_moves=0, offset_x=x, offset_y=y)
-            break
-        except:
-            print("No lasers on")
-            break
+    mining_lasers_off()
 
     # Reselect asteroid in case some other was selected while function tried to turn off lasers
     # and none where on
@@ -235,3 +229,25 @@ def traveling()-> None:
                 counter += 1
 
     print("Next asteroid reached")
+
+def mining_lasers_off():
+    pyautogui.press("f1")
+    time.sleep(1)
+    pyautogui.press("f2")
+    time.sleep(15)
+
+    mining_laser = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\mining_laser_starting_point.png"
+    x = -100
+    y = 50
+
+    while True:
+        try:
+            print("Clicking lasers")
+            mouse_action(mining_laser, "click", rand_moves=0, offset_x=x, offset_y=y)
+            time.sleep(1)
+            mouse_action(mining_laser, "click", rand_moves=0, offset_x=x, offset_y=y)
+            print("Clicked lasers")
+            break
+        except:
+            print("No lasers on")
+            break
