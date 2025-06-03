@@ -90,11 +90,15 @@ class Idler():
         """
         Logs user in
         """
-        eve_launcher_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\eve_icon.png"
-        mouse_action(eve_launcher_img, "click")
+        try:
+            eve_launcher_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\eve_icon.png"
+            mouse_action(eve_launcher_img, "click")
 
-        play_now_btn_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\play_now.png"
-        mouse_action(play_now_btn_img, "click")
+            play_now_btn_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\play_now.png"
+            mouse_action(play_now_btn_img, "click")
+        except:
+            print("Failed to start the game. Either play now button or eve icon is not vissible on the screen.")
+            exit(1)
 
         time.sleep(22)
 
