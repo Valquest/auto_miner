@@ -6,6 +6,8 @@ from config import config
 
 time.sleep(2)
 
-idling = idling.Idler()
-while True:
-    idling.rest()
+pyautogui.keyDown("shift")
+pyautogui.write("f")
+pyautogui.keyUp("shift")
+time.sleep(3)
+pyautogui.write("f")

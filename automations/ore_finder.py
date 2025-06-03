@@ -3,6 +3,7 @@ import time
 import random
 from config import config
 from pyautogui import ImageNotFoundException
+from automations import drones
 
 mining_tab_image_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\mining_tab.png"
 warp_image_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\warp_to_within.png"
@@ -11,8 +12,9 @@ asteroid_belt_img_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_find
 warping_text = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\warping.png"
 mining_completed_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Mining_Completed.png"
 
+drone = drones.Drones()
 
-def mine():
+def mine(retriever=False):
 
     mouse_action(asteroid_belt_img_path, "rightClick")
 
@@ -23,9 +25,9 @@ def mine():
 
     # Locate asteroid to mine again (in case it was not marked the first time 
     # as targeting only works if is marked in Overview window)
-    approach_closest_asteroid()
+    approach_closest_asteroid(retriever=retriever)
 
-    mine_in_asteroid_belt()
+    mine_in_asteroid_belt(retriever=retriever)
 
     # Return home
     mouse_action(home_path, "rightClick", offset_x=round(random.randint(1,80)), offset_y=round(random.randint(1,5)))
@@ -43,13 +45,13 @@ def random_movement(points:int=1)-> None:
     return: 
         None
     """
-    screen_width = 1900
-    screen_height = 1000
+    screen_width = 1500
+    screen_height = 800
 
     for point in range(points):
         print(f"Visiting random point #:{point}")
-        rand_x = round(random.randint(0,screen_width))
-        rand_y = round(random.randint(0,screen_height))
+        rand_x = round(random.randint(400,screen_width))
+        rand_y = round(random.randint(200,screen_height))
         pyautogui.moveTo(rand_x, rand_y, duration=0.5)
 
 def mouse_action(img:str, click_type:str, offset_x:int=0, offset_y:int=0, rand_moves=3, confidence=0.85)-> None:
@@ -82,7 +84,7 @@ def mouse_action(img:str, click_type:str, offset_x:int=0, offset_y:int=0, rand_m
 
     time.sleep(random_delay)
 
-def mine_in_asteroid_belt()-> None:
+def mine_in_asteroid_belt(retriever=False)-> None:
     """ 
     Start mining, check if asteroid is depleted if so, find another one to mind, when
     timer is done head back to offload
@@ -91,15 +93,24 @@ def mine_in_asteroid_belt()-> None:
     """
     mining_lasers_on()
 
+    if retriever:
+        drone.launch_drones()
+
     timer = 0
     asteroid_depleted = False
     asteroid_depleted_img_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\depleted.png"
-    while timer < 900: #865
+    while timer < 1800: #865 for Venturer
         if asteroid_depleted:
 
-            approach_closest_asteroid()
+            if retriever:
+                drone.retrieve_drones()
+
+            approach_closest_asteroid(retriever=retriever)
 
             mining_lasers_on()
+
+            if retriever:
+                drone.launch_drones()
 
             asteroid_depleted = False
         try:
@@ -121,7 +132,7 @@ def mine_in_asteroid_belt()-> None:
             pass
     print("Done mining")
 
-def approach_closest_asteroid():
+def approach_closest_asteroid(retriever=False):
     # Select first asteroid form the summary console
     mouse_action(mining_tab_image_path, "click", offset_y=50, confidence=0.95)
 
@@ -133,19 +144,20 @@ def approach_closest_asteroid():
 
     time.sleep(1)
 
-    # Turn on boosters
-    pyautogui.keyDown("alt")
-    pyautogui.press("f2")
-    pyautogui.keyUp("alt")
+    if not retriever:
+        # Turn on boosters
+        pyautogui.keyDown("alt")
+        pyautogui.press("f2")
+        pyautogui.keyUp("alt")
 
-    time.sleep(10)
+        time.sleep(10)
 
-    # Turn off boosters
-    pyautogui.keyDown("alt")
-    pyautogui.press("f2")
-    pyautogui.keyUp("alt")
+        # Turn off boosters
+        pyautogui.keyDown("alt")
+        pyautogui.press("f2")
+        pyautogui.keyUp("alt")
 
-    traveling()
+    traveling(retriever=retriever)
 
 def mining_lasers_on():
 
@@ -200,12 +212,15 @@ def warp()-> None:
 
     print("Warping completed")
 
-def traveling()-> None:
+def traveling(retriever=False)-> None:
     """
     Minimises idle time when ship is traveling in between asteroids
     """
-    APPROACH_TIME = 60
+    approach_time = 60
     counter = 0
+
+    if retriever:
+        approach_time = 180 
 
     # Initial wait before flying speed is appearing on the screen
     time.sleep(10)
@@ -213,18 +228,24 @@ def traveling()-> None:
     target_image_bigger = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Target_Locked_In_Bigger.png"
     target_image_smaller = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Target_Locked_In_Smaller.png"
 
-    while counter < APPROACH_TIME:
+    while counter < approach_time:
         try:
+            print("looking for targets")
             targeted = pyautogui.locateOnScreen(target_image_bigger, confidence=0.90)
             if targeted:
+                print("found target")
+                time.sleep(60)
                 break
         except:
             try:
                 target = pyautogui.locateOnScreen(target_image_smaller, confidence=0.90)
                 if target:
+                    print("found target")
+                    time.sleep(60)
                     break
             except:
-                time.sleep(2)
+                print("Trying to target")
+                time.sleep(10)
                 pyautogui.press('ctrl')
                 counter += 1
 
