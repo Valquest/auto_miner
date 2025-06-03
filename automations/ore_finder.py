@@ -11,6 +11,8 @@ home_path = f"{config.root_path}\\auto_miner\\screenshots\\general\\refinery.png
 asteroid_belt_img_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\asteroid_belt.png"
 warping_text = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\warping.png"
 mining_completed_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Mining_Completed.png"
+mining_completed_retriever_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\mining_completed_retriever.png"
+
 
 drone = drones.Drones()
 
@@ -123,7 +125,10 @@ def mine_in_asteroid_belt(retriever=False)-> None:
             if timer % 100 == 0:
                 print(f"Timer at: {timer}")
         try:
-            mining_completed = pyautogui.locateCenterOnScreen(mining_completed_img, confidence=0.90)
+            if retriever:
+                mining_completed = pyautogui.locateCenterOnScreen(mining_completed_retriever_img, confidence=0.90)
+            else:
+                mining_completed = pyautogui.locateCenterOnScreen(mining_completed_img, confidence=0.90)
             if mining_completed:
                 print("Mining is completed")
                 return
@@ -233,14 +238,16 @@ def traveling(retriever=False)-> None:
             targeted = pyautogui.locateOnScreen(target_image_bigger, confidence=0.90)
             if targeted:
                 print("found target")
-                time.sleep(60)
+                if retriever:
+                    time.sleep(15)
                 break
         except:
             try:
                 target = pyautogui.locateOnScreen(target_image_smaller, confidence=0.90)
                 if target:
                     print("found target")
-                    time.sleep(60)
+                    if retriever:
+                        time.sleep(15)
                     break
             except:
                 print("Trying to target")
