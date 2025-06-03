@@ -187,6 +187,9 @@ def warp()-> None:
     WARP_TIME = 40
     warp_ended_approval = 0
 
+    # Retrieve drones before warping if possible
+    drone.retrieve_drones()
+
     warping_text = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Warping_text.png"
 
     while True:
