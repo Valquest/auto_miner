@@ -127,6 +127,7 @@ def mine_in_asteroid_belt(retriever=False)-> None:
         try:
             if retriever:
                 mining_completed = pyautogui.locateCenterOnScreen(mining_completed_retriever_img, confidence=0.90)
+                drone.retrieve_drones()
             else:
                 mining_completed = pyautogui.locateCenterOnScreen(mining_completed_img, confidence=0.90)
             if mining_completed:
@@ -134,6 +135,7 @@ def mine_in_asteroid_belt(retriever=False)-> None:
                 return
         except:
             pass
+    drone.retrieve_drones()
     print("Done mining")
 
 def approach_closest_asteroid(retriever=False):

@@ -68,12 +68,6 @@ class Idler():
         """
         Clicks key combinations to turn off the game
         """
-        mining_lasers_off()
-
-        # Untarget the asteroid
-        target_off = f"{config.root_path}\\auto_miner\\screenshots\\resting\\target_off.png"
-        mouse_action(target_off, "click")
-
         pyautogui.keyDown("ctrl")
         pyautogui.press("space")
         pyautogui.keyUp("ctrl")
@@ -96,10 +90,27 @@ class Idler():
         """
         Logs user in
         """
+        eve_launcher_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\eve_icon.png"
+        mouse_action(eve_launcher_img, "click")
+
         play_now_btn_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\play_now.png"
         mouse_action(play_now_btn_img, "click")
 
         time.sleep(22)
+
+        try:
+            claim_gift_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\claim_gift.png"
+            mouse_action(claim_gift_img, "click")
+            close_gift_window_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\close_gift_window.png"
+            mouse_action(close_gift_window_img, "click")
+        except:
+            try:
+                print("Looking for an exit button for \"Claim your gift window\"")
+                exit_gift_window_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\exit_gift_window.png"
+                mouse_action(exit_gift_window_img, "click")
+            except:
+                print("Didnt find exit button, passing")
+                pass
 
         player_character_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\character_selection.png"
         mouse_action(player_character_img, "click", offset_x=-283, offset_y=-471)
@@ -107,13 +118,14 @@ class Idler():
         # Check if warping
         warp()
 
-    @staticmethod
-    def anti_computer_sleep():
+    def anti_computer_sleep(self):
         try:
-            pyautogui.move(1000, 500)
+            pyautogui.moveTo(1000, 500)
             time.sleep(500)
-            pyautogui.move(1050, 500)
+            pyautogui.moveTo(1050, 500)
             time.sleep(500)
+            print(f"Next log in at: {self.end_of_the_rest_time.hour}:{self.end_of_the_rest_time.minute}")
         except:
             print("Failed to move the mouse")
+            return
 

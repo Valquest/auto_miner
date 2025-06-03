@@ -7,48 +7,29 @@ from config import config
 time.sleep(4)
 
 """
-Minimises idle time when ship is traveling in between asteroids
+Logs user in
 """
+play_now_btn_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\play_now.png"
+ore_finder.mouse_action(play_now_btn_img, "click")
 
-counter = 0
-approach_time = 180 
+time.sleep(22)
 
-target_image_bigger = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Target_Locked_In_Bigger.png"
-target_image_smaller = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Target_Locked_In_Smaller.png"
-too_far_to_mine_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\strip_miner_too_far.png"
-
-while counter < approach_time:
+try:
+    claim_gift_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\claim_gift.png"
+    ore_finder.mouse_action(claim_gift_img, "click")
+    close_gift_window_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\close_gift_window.png"
+    ore_finder.mouse_action(close_gift_window_img, "click")
+except:
     try:
-        print("looking for targets")
-        targeted = pyautogui.locateOnScreen(target_image_bigger, confidence=0.90)
-        if targeted:
-            print("found target")
-            break
+        print("Looking for an exit button")
+        exit_gift_window_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\exit_gift_window.png"
+        ore_finder.mouse_action(exit_gift_window_img, "click")
     except:
-        try:
-            target = pyautogui.locateOnScreen(target_image_smaller, confidence=0.90)
-            if target:
-                print("found target")
-                break
-        except:
-            print("Trying to target")
-            time.sleep(10)
-            pyautogui.press('ctrl')
-            counter += 1
+        print("Didnt find exit button, passing")
+        pass
 
-while counter < approach_time:
-    try:
-        pyautogui.press('f1')
-        time.sleep(2)
-        target = pyautogui.locateOnScreen(too_far_to_mine_img, confidence=0.80)
-        if target:
-            print("Too far to mine")
-            time.sleep(15)
-            counter += 1
-    except:
-        print("Can mine, within reach")
-        pyautogui.press('f1')
-        break
+player_character_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\character_selection.png"
+ore_finder.mouse_action(player_character_img, "click", offset_x=-283, offset_y=-471)
 
-
-print("Next asteroid is in reach")
+# Check if warping
+ore_finder.warp()
