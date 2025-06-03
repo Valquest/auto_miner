@@ -48,8 +48,7 @@ def random_movement(points:int=1)-> None:
     screen_width = 1500
     screen_height = 800
 
-    for point in range(points):
-        print(f"Visiting random point #:{point}")
+    for _ in range(points):
         rand_x = round(random.randint(400,screen_width))
         rand_y = round(random.randint(200,screen_height))
         pyautogui.moveTo(rand_x, rand_y, duration=0.5)
