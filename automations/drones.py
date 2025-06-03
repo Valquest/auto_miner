@@ -13,10 +13,13 @@ class Drones():
         pyautogui.write("f")
 
     def retrieve_drones(self):
-        pyautogui.keyDown("shift")
+        print("Retrieving drones")
+        time.sleep(2)
+        pyautogui.keyDown("shiftleft")
         time.sleep(0.5)
         pyautogui.write("r")
-        pyautogui.keyUp("shift")
+        time.sleep(0.5)
+        pyautogui.keyUp("shiftleft")
         time.sleep(20)
 
     

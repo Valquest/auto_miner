@@ -22,7 +22,7 @@ def items_to_refinery():
     transfer_image_path = f"{config.root_path}\\auto_miner\\screenshots\\inv_mover\\transfer.png"
 
     # Drag items from ships inv to refineries inv
-    for i in range(2):
+    for i in range(4):
         # Stack items to refresh order in inventory
         stack_items()
 

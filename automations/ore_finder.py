@@ -148,18 +148,17 @@ def approach_closest_asteroid(retriever=False):
 
     time.sleep(1)
 
-    if not retriever:
-        # Turn on boosters
-        pyautogui.keyDown("alt")
-        pyautogui.press("f2")
-        pyautogui.keyUp("alt")
+    # Turn on boosters
+    pyautogui.keyDown("alt")
+    pyautogui.press("f2")
+    pyautogui.keyUp("alt")
 
-        time.sleep(10)
+    time.sleep(60)
 
-        # Turn off boosters
-        pyautogui.keyDown("alt")
-        pyautogui.press("f2")
-        pyautogui.keyUp("alt")
+    # Turn off boosters
+    pyautogui.keyDown("alt")
+    pyautogui.press("f2")
+    pyautogui.keyUp("alt")
 
     traveling(retriever=retriever)
 
@@ -231,31 +230,40 @@ def traveling(retriever=False)-> None:
 
     target_image_bigger = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Target_Locked_In_Bigger.png"
     target_image_smaller = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Target_Locked_In_Smaller.png"
+    too_far_to_mine_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\strip_miner_too_far.png"
 
     while counter < approach_time:
         try:
-            print("looking for targets")
+            print("looking for target marks")
             targeted = pyautogui.locateOnScreen(target_image_bigger, confidence=0.90)
             if targeted:
-                print("found target")
-                if retriever:
-                    time.sleep(15)
+                print("found target mark")
                 break
         except:
             try:
                 target = pyautogui.locateOnScreen(target_image_smaller, confidence=0.90)
                 if target:
-                    print("found target")
-                    if retriever:
-                        time.sleep(15)
+                    print("found target mark")
                     break
             except:
-                print("Trying to target")
+                print("Trying to target asteroid")
                 time.sleep(10)
                 pyautogui.press('ctrl')
                 counter += 1
 
-    print("Next asteroid reached")
+    while counter < approach_time:
+        try:
+            pyautogui.press('f1')
+            time.sleep(2)
+            target = pyautogui.locateOnScreen(too_far_to_mine_img, confidence=0.80)
+            if target:
+                time.sleep(15)
+                counter += 1
+        except:
+            pyautogui.press('f1')
+            break
+
+    print("Next asteroid is in reach")
 
 def mining_lasers_off():
     pyautogui.press("f1")
