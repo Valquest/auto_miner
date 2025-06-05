@@ -97,6 +97,7 @@ def mine_in_asteroid_belt(retriever=False)-> None:
     if retriever:
         drone.launch_drones()
 
+    mining_corretly = False
     timer = 0
     asteroid_depleted = False
     asteroid_depleted_img_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\depleted.png"
@@ -124,13 +125,18 @@ def mine_in_asteroid_belt(retriever=False)-> None:
             time.sleep(1)
             if timer % 100 == 0:
                 print(f"Timer at: {timer}")
-        try:
-            mining_in_progress_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\in_mining_process.png"
-            mining_correctly = pyautogui.locateOnScreen(mining_in_progress_img, confidence=0.7)
-            if mining_correctly:
-                pass
-        except:
-            mining_lasers_on()
+        if not mining_corretly:
+            try:
+                time.sleep(5)
+                mining_in_progress_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\in_mining_process.png"
+                mining_correctly = pyautogui.locateOnScreen(mining_in_progress_img, confidence=0.7)
+                if mining_correctly:
+                    mining_corretly = True
+                    pass
+            except:
+                approach_closest_asteroid()
+                mining_lasers_on()
+                drone.launch_drones()
         try:
             if retriever:
                 mining_completed = pyautogui.locateCenterOnScreen(mining_completed_retriever_img, confidence=0.90)
@@ -162,14 +168,12 @@ def approach_closest_asteroid(retriever=False):
     pyautogui.press("f2")
     pyautogui.keyUp("alt")
 
-    time.sleep(60)
+    traveling(retriever=retriever)
 
     # Turn off boosters
     pyautogui.keyDown("alt")
     pyautogui.press("f2")
     pyautogui.keyUp("alt")
-
-    traveling(retriever=retriever)
 
 def mining_lasers_on():
 
@@ -279,10 +283,10 @@ def traveling(retriever=False)-> None:
     print("Next asteroid is in reach")
 
 def mining_lasers_off():
-    pyautogui.press("f1")
-    time.sleep(1)
-    pyautogui.press("f2")
-    time.sleep(15)
+    # pyautogui.press("f1")
+    # time.sleep(1)
+    # pyautogui.press("f2")
+    # time.sleep(15)
 
     mining_laser = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\mining_laser_starting_point.png"
     x = -100

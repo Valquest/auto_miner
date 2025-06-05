@@ -1,35 +1,20 @@
 import time
-from automations import ore_finder, idling
+from automations import ore_finder, idling, drones
 import pyautogui
 from config import config
 
 
 time.sleep(4)
 
-"""
-Logs user in
-"""
-play_now_btn_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\play_now.png"
-ore_finder.mouse_action(play_now_btn_img, "click")
-
-time.sleep(22)
+drone = drones.Drones()
 
 try:
-    claim_gift_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\claim_gift.png"
-    ore_finder.mouse_action(claim_gift_img, "click")
-    close_gift_window_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\close_gift_window.png"
-    ore_finder.mouse_action(close_gift_window_img, "click")
-except:
-    try:
-        print("Looking for an exit button")
-        exit_gift_window_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\exit_gift_window.png"
-        ore_finder.mouse_action(exit_gift_window_img, "click")
-    except:
-        print("Didnt find exit button, passing")
+    mining_in_progress_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\in_mining_process.png"
+    mining_correctly = pyautogui.locateOnScreen(mining_in_progress_img, confidence=0.7)
+    if mining_correctly:
+        print("mining correctly")
         pass
-
-player_character_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\character_selection.png"
-ore_finder.mouse_action(player_character_img, "click", offset_x=-283, offset_y=-471)
-
-# Check if warping
-ore_finder.warp()
+except:
+    print("Mining incorrectly")
+    ore_finder.mining_lasers_on()
+    drone.launch_drones()
