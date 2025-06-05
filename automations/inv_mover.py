@@ -22,18 +22,23 @@ def items_to_refinery():
     transfer_image_path = f"{config.root_path}\\auto_miner\\screenshots\\inv_mover\\transfer.png"
 
     # Drag items from ships inv to refineries inv
-    for i in range(4):
-        # Stack items to refresh order in inventory
-        stack_items()
+    no_more_items_img = f"{config.root_path}\\auto_miner\\screenshots\\inv_mover\\no_more_items.png"
+    while True:
+        try:
+            pyautogui.locateOnScreen(no_more_items_img, confidence=0.90)
+            break
+        except:
+            # Stack items to refresh order in inventory
+            stack_items()
 
-        # Move mouse to item in ships inv.
-        ore_finder.mouse_action(veldspar_inv_path, "move", offset_x=120, rand_moves=0)
+            # Move mouse to item in ships inv.
+            ore_finder.mouse_action(veldspar_inv_path, "move", offset_x=120, rand_moves=0)
 
-        # Drag item to transfering window
-        drag_items_to_refinery_inv()
+            # Drag item to transfering window
+            drag_items_to_refinery_inv()
 
-        # Click 'Transfer' button
-        ore_finder.mouse_action(transfer_image_path, "click", rand_moves=0)
+            # Click 'Transfer' button
+            ore_finder.mouse_action(transfer_image_path, "click", rand_moves=0)
             
 
 def stack_items():

@@ -20,6 +20,6 @@ class Drones():
         pyautogui.write("r")
         time.sleep(0.5)
         pyautogui.keyUp("shiftleft")
-        time.sleep(20)
+        time.sleep(10)
 
     

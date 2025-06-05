@@ -100,7 +100,7 @@ def mine_in_asteroid_belt(retriever=False)-> None:
     timer = 0
     asteroid_depleted = False
     asteroid_depleted_img_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\depleted.png"
-    while timer < 1800: #865 for Venturer
+    while timer < 1800: #865 for Venturer, 1800 for Retriever
         if asteroid_depleted:
 
             if retriever:
@@ -124,6 +124,13 @@ def mine_in_asteroid_belt(retriever=False)-> None:
             time.sleep(1)
             if timer % 100 == 0:
                 print(f"Timer at: {timer}")
+        try:
+            mining_in_progress_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\in_mining_process.png"
+            mining_correctly = pyautogui.locateOnScreen(mining_in_progress_img, confidence=0.7)
+            if mining_correctly:
+                pass
+        except:
+            mining_lasers_on()
         try:
             if retriever:
                 mining_completed = pyautogui.locateCenterOnScreen(mining_completed_retriever_img, confidence=0.90)
@@ -167,6 +174,7 @@ def approach_closest_asteroid(retriever=False):
 def mining_lasers_on():
 
     mining_lasers_off()
+    drone.retrieve_drones()
 
     # Reselect asteroid in case some other was selected while function tried to turn off lasers
     # and none where on
