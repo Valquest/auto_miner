@@ -4,6 +4,7 @@ import pyautogui
 from automations.ore_finder import mining_lasers_off, mouse_action, warp
 from config import config
 import time
+from assets.image_loader import Image_loader
 
 class Idler():
     """
@@ -17,6 +18,7 @@ class Idler():
         self.start_time = datetime.now()
         self.start_of_the_rest_time = Time(hour=11, minute=random.randint(1, 59), second=random.randint(1, 59))
         self.end_of_the_rest_time = Time(hour=14, minute=random.randint(1, 59), second=random.randint(1, 59))
+        self.imgs = Image_loader()
 
     def rest(self):
         if self.is_time_to_rest():
@@ -63,8 +65,7 @@ class Idler():
         
         return [hours_to_wait, minutes_to_wait]
 
-    @staticmethod
-    def log_off():
+    def log_off(self):
         """
         Clicks key combinations to turn off the game
         """
@@ -80,7 +81,7 @@ class Idler():
         pyautogui.keyUp("alt")
         pyautogui.keyUp("shift")
 
-        quit_radian_btn = f"{config.root_path}\\auto_miner\\screenshots\\resting\\quit.png"
+        quit_radian_btn = self.imgs.quit_radian_btn
         mouse_action(quit_radian_btn, "click", offset_x=-26, offset_y=-25)
 
         time.sleep(30)

@@ -4,17 +4,20 @@ import random
 from config import config
 from pyautogui import ImageNotFoundException
 from automations import drones
+from assets.image_loader import Image_loader
 
+# Instantiate classes
+imgs = Image_loader()
+drone = drones.Drones()
+
+# Load image paths
 mining_tab_image_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\mining_tab.png"
 warp_image_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\warp_to_within.png"
-home_path = f"{config.root_path}\\auto_miner\\screenshots\\general\\refinery.png"
 asteroid_belt_img_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\asteroid_belt.png"
 warping_text = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\warping.png"
 mining_completed_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Mining_Completed.png"
 mining_completed_retriever_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\mining_completed_retriever.png"
 
-
-drone = drones.Drones()
 
 def mine(retriever=False):
 
@@ -32,7 +35,7 @@ def mine(retriever=False):
     mine_in_asteroid_belt(retriever=retriever)
 
     # Return home
-    mouse_action(home_path, "rightClick", offset_x=round(random.randint(1,80)), offset_y=round(random.randint(1,5)))
+    mouse_action(imgs.refinery_btn, "rightClick", offset_x=round(random.randint(1,80)), offset_y=round(random.randint(1,5)))
 
     mouse_action(warp_image_path, "click")
 
