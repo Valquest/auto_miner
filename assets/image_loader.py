@@ -53,8 +53,4 @@ class Image_loader():
         self.exit_gift_window_btn = self.resting_path + "exit_gift_window.png"
         self.player_character_img_btn = self.resting_path + "character_selection.png"
 
-
-
-
-
         self.quit_radian_btn = self.resting_path + "quit.png"
