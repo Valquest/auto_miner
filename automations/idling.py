@@ -96,12 +96,15 @@ class Idler():
             # Check if "Play Now" button is on screen. If not, EVE launcher might be hidden
             pyautogui.locateOnScreen(self.imgs.play_now_btn, confidence=0.90)
 
+            # Click the play now button
+            mouse_action(self.imgs.play_now_btn, "click", rand_moves=0)
+
         except:
             # Click the game launcher button
-            mouse_action(self.imgs.eve_launcher_btn, "click")
+            mouse_action(self.imgs.eve_launcher_btn, "click", rand_moves=0)
 
             # Click the play now button
-            mouse_action(self.imgs.play_now_btn, "click")
+            mouse_action(self.imgs.play_now_btn, "click", rand_moves=0)
 
         # Giving time to load the game and define the state
         load_timer = 30
@@ -119,7 +122,7 @@ class Idler():
                 pass
 
             try:
-                pyautogui.locateOnScreen(self.imgs.exit_gift_window_btn, confidence=0.90)
+                pyautogui.locateOnScreen(self.imgs.claim_gift_btn, confidence=0.90)
                 first_element_found = "CLAIM_GIFT"
                 break
             except:
@@ -127,10 +130,11 @@ class Idler():
 
             # Decrement timer
             load_timer -= 1
+            time.sleep(1)
 
         match first_element_found:
             case "LOGIN":
-                mouse_action(self.imgs.player_character_img_btn, "click", offset_x=-283, offset_y=-471)
+                mouse_action(self.imgs.player_character_img_btn, "click", offset_x=-283, offset_y=-471, rand_moves=0)
             case "CLAIM_GIFT":
                 # Claim daily gift
                 self.claim_daily_gift()
