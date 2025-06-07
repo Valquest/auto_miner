@@ -40,6 +40,9 @@ class Image_loader():
 
         # Defining inventory movers image paths
         self.mining_hold_btn = self.inv_mover_path + "mining_hold.png"
-
+        self.transfer_btn = self.inv_mover_path + "transfer.png"
+        self.empty_inv_indicator = self.inv_mover_path + "no_more_items.png"
+        self.stack_all_btn = self.inv_mover_path + "stack_all.png"
+        self.item_drop_destination = self.inv_mover_path + "drop_items_here.png"
 
         self.quit_radian_btn = self.resting_path + "quit.png"
