@@ -45,4 +45,16 @@ class Image_loader():
         self.stack_all_btn = self.inv_mover_path + "stack_all.png"
         self.item_drop_destination = self.inv_mover_path + "drop_items_here.png"
 
+        # Defining resting directory image paths
+        self.eve_launcher_btn = self.resting_path + "eve_icon.png"
+        self.play_now_btn = self.resting_path + "play_now.png"
+        self.claim_gift_btn = self.resting_path + "claim_gift.png"
+        self.close_gift_window_btn = self.resting_path + "close_gift_window.png"
+        self.exit_gift_window_btn = self.resting_path + "exit_gift_window.png"
+        self.player_character_img_btn = self.resting_path + "character_selection.png"
+
+
+
+
+
         self.quit_radian_btn = self.resting_path + "quit.png"

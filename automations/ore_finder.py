@@ -194,6 +194,19 @@ def mining_lasers_on():
     time.sleep(1)
     pyautogui.press("f2")
 
+def wait_for_end_of_warp()->None:
+    """
+    Checks if ship is in warp mode
+    """
+    while True:
+        try:
+            found_warp_text = pyautogui.locateCenterOnScreen(warping_text, confidence=0.75)
+            if found_warp_text:
+                print("Warp drive active")
+                break
+        except:
+            time.sleep(1)
+
 def warp()-> None:
     """
     Manages warping rest time. Rests while warp. Solves issue with fixed warp time, where
@@ -207,14 +220,7 @@ def warp()-> None:
 
     warping_text = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Warping_text.png"
 
-    while True:
-        try:
-            found_warp_text = pyautogui.locateCenterOnScreen(warping_text, confidence=0.75)
-            if found_warp_text:
-                print("Warp drive active")
-                break
-        except:
-            time.sleep(1)
+    wait_for_end_of_warp()
 
     # Delay for ship to warp to an asteroid
     is_warping_check = 0

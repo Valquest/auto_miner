@@ -1,7 +1,7 @@
 from datetime import datetime, time as Time
 import random
 import pyautogui
-from automations.ore_finder import mining_lasers_off, mouse_action, warp
+from automations.ore_finder import mining_lasers_off, mouse_action, wait_for_end_of_warp
 from config import config
 import time
 from assets.image_loader import Image_loader
@@ -86,44 +86,77 @@ class Idler():
 
         time.sleep(30)
 
-    @staticmethod
-    def log_in():
+    def log_in(self)->None:
         """
-        Logs user in
+        Executes action chain to log user in to the game
         """
-        try:
-            eve_launcher_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\eve_icon.png"
-            mouse_action(eve_launcher_img, "click")
-
-            play_now_btn_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\play_now.png"
-            mouse_action(play_now_btn_img, "click")
-        except:
-            print("Failed to start the game. Either play now button or eve icon is not vissible on the screen.")
-            exit(1)
-
-        time.sleep(22)
+        print("Logging in")
 
         try:
-            claim_gift_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\claim_gift.png"
-            mouse_action(claim_gift_img, "click")
-            close_gift_window_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\close_gift_window.png"
-            mouse_action(close_gift_window_img, "click")
+            # Check if "Play Now" button is on screen. If not, EVE launcher might be hidden
+            pyautogui.locateOnScreen(self.imgs.play_now_btn, confidence=0.90)
+
         except:
+            # Click the game launcher button
+            mouse_action(self.imgs.eve_launcher_btn, "click")
+
+            # Click the play now button
+            mouse_action(self.imgs.play_now_btn, "click")
+
+        # Giving time to load the game and define the state
+        load_timer = 30
+
+        # Checks if gift window or login button appears first
+        first_element_found = ""
+
+        while load_timer >= 0:
             try:
-                print("Looking for an exit button for \"Claim your gift window\"")
-                exit_gift_window_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\exit_gift_window.png"
-                mouse_action(exit_gift_window_img, "click")
+                # Tries to find UI elements needed to login, if it fails, assume that gift popup window is open
+                pyautogui.locateOnScreen(self.imgs.player_character_img_btn, confidence=0.90)
+                first_element_found = "LOGIN"
+                break
             except:
-                print("Didnt find exit button, passing")
                 pass
 
-        player_character_img = f"{config.root_path}\\auto_miner\\screenshots\\resting\\character_selection.png"
-        mouse_action(player_character_img, "click", offset_x=-283, offset_y=-471)
+            try:
+                pyautogui.locateOnScreen(self.imgs.exit_gift_window_btn, confidence=0.90)
+                first_element_found = "CLAIM_GIFT"
+                break
+            except:
+                pass
 
-        # Check if warping
-        warp()
+            # Decrement timer
+            load_timer -= 1
 
-    def anti_computer_sleep(self):
+        match first_element_found:
+            case "LOGIN":
+                mouse_action(self.imgs.player_character_img_btn, "click", offset_x=-283, offset_y=-471)
+            case "CLAIM_GIFT":
+                # Claim daily gift
+                self.claim_daily_gift()
+            case _:
+                print("Could not click neither \"Claim gift\" nor login buttons")
+
+        # Check if warping and wait until warping ends
+        wait_for_end_of_warp()
+
+    def claim_daily_gift(self)->None:
+        # Try claiming gift. If not possible, try closing the gift window
+        try:
+            # Click the "Claim Gift" button if gift is ready for the day
+            mouse_action(self.imgs.claim_gift_btn, "click")
+
+            # Give time for buttons to load
+            time.sleep(2)
+
+            # After claiming, close the gift window
+            mouse_action(self.imgs.close_gift_window_btn, "click")
+
+        except:
+            mouse_action(self.imgs.exit_gift_window_btn, "click")
+
+    def anti_computer_sleep(self)->None:
+        "Moves mouse left and right once"
         try:
             pyautogui.moveTo(1000, 500)
             time.sleep(500)
