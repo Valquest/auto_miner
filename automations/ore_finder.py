@@ -10,20 +10,11 @@ from assets.image_loader import Image_loader
 imgs = Image_loader()
 drone = drones.Drones()
 
-# Load image paths
-mining_tab_image_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\mining_tab.png"
-warp_image_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\warp_to_within.png"
-asteroid_belt_img_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\asteroid_belt.png"
-warping_text = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\warping.png"
-mining_completed_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Mining_Completed.png"
-mining_completed_retriever_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\mining_completed_retriever.png"
-
-
 def mine(retriever=False):
 
-    mouse_action(asteroid_belt_img_path, "rightClick")
+    mouse_action(imgs.asteroid_belt_btn, "rightClick")
 
-    mouse_action(warp_image_path, "click", offset_x=round(random.randint(1, 60)), 
+    mouse_action(imgs.warp_btn, "click", offset_x=round(random.randint(1, 60)), 
               offset_y=round(random.randint(1, 3)))
 
     warp()
@@ -37,7 +28,7 @@ def mine(retriever=False):
     # Return home
     mouse_action(imgs.refinery_btn, "rightClick", offset_x=round(random.randint(1,80)), offset_y=round(random.randint(1,5)))
 
-    mouse_action(warp_image_path, "click")
+    mouse_action(imgs.warp_btn, "click")
 
     warp()
 
@@ -142,10 +133,10 @@ def mine_in_asteroid_belt(retriever=False)-> None:
                 drone.launch_drones()
         try:
             if retriever:
-                mining_completed = pyautogui.locateCenterOnScreen(mining_completed_retriever_img, confidence=0.90)
+                mining_completed = pyautogui.locateCenterOnScreen(imgs.mining_completed_retriever_img, confidence=0.90)
                 drone.retrieve_drones()
             else:
-                mining_completed = pyautogui.locateCenterOnScreen(mining_completed_img, confidence=0.90)
+                mining_completed = pyautogui.locateCenterOnScreen(imgs.mining_completed_img, confidence=0.90)
             if mining_completed:
                 print("Mining is completed")
                 return
@@ -156,7 +147,7 @@ def mine_in_asteroid_belt(retriever=False)-> None:
 
 def approach_closest_asteroid(retriever=False):
     # Select first asteroid form the summary console
-    mouse_action(mining_tab_image_path, "click", offset_y=50, confidence=0.95)
+    mouse_action(imgs.mining_tab_img, "click", offset_y=50, confidence=0.95)
 
     # Approach asteroid by using keyboard shortcuts
     pyautogui.press("q")
@@ -185,7 +176,7 @@ def mining_lasers_on():
 
     # Reselect asteroid in case some other was selected while function tried to turn off lasers
     # and none where on
-    mouse_action(mining_tab_image_path, "click", offset_y=50, confidence=0.95)
+    mouse_action(imgs.mining_tab_img, "click", offset_y=50, confidence=0.95)
 
     # Locking in target and starting lasers
     pyautogui.press("ctrl")
@@ -200,7 +191,7 @@ def wait_for_end_of_warp()->None:
     """
     while True:
         try:
-            found_warp_text = pyautogui.locateCenterOnScreen(warping_text, confidence=0.75)
+            found_warp_text = pyautogui.locateCenterOnScreen(imgs.warping_text, confidence=0.75)
             if found_warp_text:
                 print("Warp drive active")
                 break
@@ -218,7 +209,7 @@ def warp()-> None:
     # Retrieve drones before warping if possible
     drone.retrieve_drones()
 
-    warping_text = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Warping_text.png"
+    imgs.warping_text = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\imgs.warping_text.png"
 
     wait_for_end_of_warp()
 
@@ -227,7 +218,7 @@ def warp()-> None:
 
     while is_warping_check < WARP_TIME:
         try:
-            warping = pyautogui.locateOnScreen(warping_text, confidence=0.75)    
+            warping = pyautogui.locateOnScreen(imgs.warping_text, confidence=0.75)    
             if warping:
                 continue
         except:

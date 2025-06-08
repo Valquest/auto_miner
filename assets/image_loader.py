@@ -45,6 +45,14 @@ class Image_loader():
         self.stack_all_btn = self.inv_mover_path + "stack_all.png"
         self.item_drop_destination = self.inv_mover_path + "drop_items_here.png"
 
+        # Defining ore finder directory paths
+        self.mining_tab_img = self.ore_finder_path + "mining_tab.png"
+        self.warp_btn = self.ore_finder_path + "warp_to_within.png"
+        self.asteroid_belt_btn = self.ore_finder_path + "asteroid_belt.png"
+        self.warping_text = self.ore_finder_path + "warping.png"
+        self.mining_completed_img = self.ore_finder_path + "mining_completed.png"
+        self.mining_completed_retriever_img = self.ore_finder_path + "mining_completed_retriever.png"
+
         # Defining resting directory image paths
         self.eve_launcher_btn = self.resting_path + "eve_icon.png"
         self.play_now_btn = self.resting_path + "play_now.png"
@@ -52,5 +60,4 @@ class Image_loader():
         self.close_gift_window_btn = self.resting_path + "close_gift_window.png"
         self.exit_gift_window_btn = self.resting_path + "exit_gift_window.png"
         self.player_character_img_btn = self.resting_path + "character_selection.png"
-
         self.quit_radian_btn = self.resting_path + "quit.png"
