@@ -10,7 +10,7 @@ warp_image_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\war
 home_path = f"{config.root_path}\\auto_miner\\screenshots\\general\\refinery.png"
 asteroid_belt_img_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\asteroid_belt.png"
 warping_text = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\warping.png"
-mining_completed_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Mining_Completed.png"
+mining_completed_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\mining_completed.png"
 mining_completed_retriever_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\mining_completed_retriever.png"
 
 
@@ -202,7 +202,7 @@ def warp()-> None:
     # Retrieve drones before warping if possible
     drone.retrieve_drones()
 
-    warping_text = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Warping_text.png"
+    warping_text = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\warping_text.png"
 
     while True:
         try:
@@ -245,8 +245,8 @@ def traveling(retriever=False)-> None:
     # Initial wait before flying speed is appearing on the screen
     time.sleep(10)
 
-    target_image_bigger = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Target_Locked_In_Bigger.png"
-    target_image_smaller = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Target_Locked_In_Smaller.png"
+    target_image_bigger = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\target_locked_in_bigger.png"
+    target_image_smaller = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\target_locked_in_smaller.png"
     too_far_to_mine_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\strip_miner_too_far.png"
 
     while counter < approach_time:
