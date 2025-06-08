@@ -187,20 +187,59 @@ def mining_lasers_on():
     time.sleep(1)
     pyautogui.press("f2")
 
-def locate_indicators(indicator_img, confidence=1, move_screen=True, retries=3):
+def locate_indicators(indicator_img, confidence=1, move_screen=True, retries=3)->None:
     times_found = 0
-    while times_found < 3:
-        try:
-            found_warp_text = pyautogui.locateCenterOnScreen(imgs.warping_text, confidence=0.75)
-            if found_warp_text:
-                print("Warp drive active")
-                break
-        except:
-            time.sleep(0.5)
-    return
+    orbit_view = orbit_ui_in_space()
 
-def orbit_ui_in_space():
-    return
+    while times_found <= retries:
+        try:
+            found_indicator = pyautogui.locateCenterOnScreen(indicator_img, confidence=confidence)
+            if found_indicator:
+                times_found += 1
+                if times_found == retries:
+                    print("Indicator located")
+                    break       
+        except:
+            if move_screen:
+                try:
+                    next(orbit_view)
+                except:
+                    pass
+            # Reset counters and generator function
+            times_found = 0
+            orbit_view = orbit_ui_in_space()
+            time.sleep(0.3)
+
+def orbit_ui_in_space(drag_by=150, number_of_drags = 1, direction=-1, tactical_view=False):
+    """
+    A generator function to orbit ui in space to position identifier UI elements in bettwer
+    positions. Various backgrounds, etc.
+    """
+    starting_x = 950
+    starting_y = 100
+
+    if not tactical_view:
+        pyautogui.keyDown("alt")
+        pyautogui.press("1")
+        pyautogui.keyUp("alt")
+
+        time.sleep(1)
+
+        pyautogui.scroll(500)
+
+    while number_of_drags > 0:
+        pyautogui.moveTo(starting_x, starting_y, duration=0.3, tween=pyautogui.easeInOutQuad)
+        pyautogui.dragTo(starting_x + drag_by * direction, starting_y, duration=0.3, button="left")
+        if number_of_drags >= 1:
+            yield
+        number_of_drags -= 1
+
+    if not tactical_view:
+        pyautogui.keyDown("alt")
+        pyautogui.press("2")
+        pyautogui.keyUp("alt")
+
+    yield
 
 def wait_for_end_of_warp()->None:
     """
