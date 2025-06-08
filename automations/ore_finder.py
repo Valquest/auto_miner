@@ -10,8 +10,12 @@ from assets.image_loader import Image_loader
 imgs = Image_loader()
 drone = drones.Drones()
 
-def mine(retriever=False):
+def mine(retriever=False)-> None:
+    """
+    Handles mining execution by calling each mining process step in a right order
+    """
 
+    # Clicks the asteroid belt location shortcut
     mouse_action(imgs.asteroid_belt_btn, "rightClick")
 
     mouse_action(imgs.warp_btn, "click", offset_x=round(random.randint(1, 60)), 
@@ -182,6 +186,21 @@ def mining_lasers_on():
     pyautogui.press("f1")
     time.sleep(1)
     pyautogui.press("f2")
+
+def locate_indicators(indicator_img, confidence=1, move_screen=True, retries=3):
+    times_found = 0
+    while times_found < 3:
+        try:
+            found_warp_text = pyautogui.locateCenterOnScreen(imgs.warping_text, confidence=0.75)
+            if found_warp_text:
+                print("Warp drive active")
+                break
+        except:
+            time.sleep(0.5)
+    return
+
+def orbit_ui_in_space():
+    return
 
 def wait_for_end_of_warp()->None:
     """
