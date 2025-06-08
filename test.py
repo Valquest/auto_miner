@@ -8,32 +8,26 @@ imgs = image_loader.Image_loader()
 
 time.sleep(2)
 
-target = imgs.mining_in_progress_img
+target = imgs.warping_text
 
-def locate_indicators(indicator_img, confidence=0.95, move_screen=True, retries=3)->None:
+def find_indicator(indicator_img, confidence=0.90)->bool:
     times_found = 0
-    num_of_tries = 0
-    orbit_view = ore_finder.orbit_ui_in_space()
+    ore_finder.enter_tactical_cam_view()
 
-    while times_found <= retries or num_of_tries > 3:
+    while times_found < 2:
         try:
-            found_indicator = pyautogui.locateCenterOnScreen(indicator_img, confidence=confidence)
-            if found_indicator:
-                times_found += 1
-                if times_found == retries:
-                    print("Indicator located")
-                    next(orbit_view)
-                    break       
+            pyautogui.locateOnScreen(indicator_img, confidence=confidence)
+            times_found += 1
+            if times_found == 2:
+                ore_finder.enter_orbit_cam_view()
+                print("Found target")
+                return True
         except:
-            if move_screen:
-                try:
-                    next(orbit_view)
-                except:
-                    pass
-            # Reset counters and generator function
-            times_found = 0
-            orbit_view = ore_finder.orbit_ui_in_space()
-            time.sleep(0.3)
-            num_of_tries += 1
-
-locate_indicators(target)
+            ore_finder.orbit_screen_once()
+            if times_found > 0:
+                times_found -= 1
+    ore_finder.enter_orbit_cam_view()
+    print("Failed to find the target")
+    return False
+        
+find_indicator(target)

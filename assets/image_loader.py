@@ -49,7 +49,7 @@ class Image_loader():
         self.mining_tab_img = self.ore_finder_path + "mining_tab.png"
         self.warp_btn = self.ore_finder_path + "warp_to_within.png"
         self.asteroid_belt_btn = self.ore_finder_path + "asteroid_belt.png"
-        self.warping_text = self.ore_finder_path + "warping.png"
+        self.warping_text = self.ore_finder_path + "warping_text.png"
         self.mining_completed_img = self.ore_finder_path + "mining_completed.png"
         self.mining_completed_retriever_img = self.ore_finder_path + "mining_completed_retriever.png"
         self.asteroid_depleted_img = self.ore_finder_path + "depleted.png"

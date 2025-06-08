@@ -187,72 +187,52 @@ def mining_lasers_on():
     time.sleep(1)
     pyautogui.press("f2")
 
-def locate_indicators(indicator_img, confidence=1, move_screen=True, retries=3)->None:
+def locate_indicators(indicator_img, confidence=0.90)->bool:
+    """
+    Attempts to find provided vissual indicator. Orbits arround the ship to have more success
+    when looking for
+    """
     times_found = 0
-    orbit_view = orbit_ui_in_space()
+    enter_tactical_cam_view()
 
-    while times_found <= retries:
+    while times_found < 2:
         try:
-            found_indicator = pyautogui.locateCenterOnScreen(indicator_img, confidence=confidence)
-            if found_indicator:
-                times_found += 1
-                if times_found == retries:
-                    print("Indicator located")
-                    break       
+            pyautogui.locateOnScreen(indicator_img, confidence=confidence)
+            times_found += 1
+            if times_found == 2:
+                enter_orbit_cam_view()
+                print("Found target")
+                return True
         except:
-            if move_screen:
-                try:
-                    next(orbit_view)
-                except:
-                    pass
-            # Reset counters and generator function
-            times_found = 0
-            orbit_view = orbit_ui_in_space()
-            time.sleep(0.3)
+            orbit_screen_once()
+            if times_found > 0:
+                times_found -= 1
+    enter_orbit_cam_view()
+    print("Failed to find the target")
+    return False
 
-def orbit_ui_in_space(drag_by=150, number_of_drags = 1, direction=-1, tactical_view=False):
-    """
-    A generator function to orbit ui in space to position identifier UI elements in bettwer
-    positions. Various backgrounds, etc.
-    """
+def orbit_screen_once(drag_by=80):
     starting_x = 950
     starting_y = 100
 
-    if not tactical_view:
-        pyautogui.keyDown("alt")
-        pyautogui.press("1")
-        pyautogui.keyUp("alt")
+    pyautogui.moveTo(starting_x, starting_y, duration=0.3, tween=pyautogui.easeInOutQuad)
+    pyautogui.dragTo(starting_x - drag_by, starting_y, duration=0.3, button="left")
 
-        time.sleep(1)
+    time.sleep(1)
+    
+def enter_tactical_cam_view():
+    pyautogui.keyDown("alt")
+    pyautogui.press("1")
+    pyautogui.keyUp("alt")
 
-        pyautogui.scroll(500)
+    time.sleep(1)
 
-    while number_of_drags > 0:
-        pyautogui.moveTo(starting_x, starting_y, duration=0.3, tween=pyautogui.easeInOutQuad)
-        pyautogui.dragTo(starting_x + drag_by * direction, starting_y, duration=0.3, button="left")
-        if number_of_drags >= 1:
-            yield
-        number_of_drags -= 1
+    pyautogui.scroll(1500)
 
-    if not tactical_view:
-        pyautogui.keyDown("alt")
-        pyautogui.press("2")
-        pyautogui.keyUp("alt")
-
-    yield
-
-def wait_for_end_of_warp()->None:
-    """
-    Checks if ship is in warp mode
-    """
-    while True:
-        try:
-            found_warp_text = pyautogui.locateCenterOnScreen(imgs.warping_text, confidence=0.75)
-            if found_warp_text:
-                print("Warp drive active")
-                break
-        except:
-            time.sleep(1)
+def enter_orbit_cam_view():
+    pyautogui.keyDown("alt")
+    pyautogui.press("2")
+    pyautogui.keyUp("alt")
 
 def warp()-> None:
     """
@@ -265,7 +245,8 @@ def warp()-> None:
     # Retrieve drones before warping if possible
     drone.retrieve_drones()
 
-    wait_for_end_of_warp()
+    if not locate_indicators(imgs.warping_text, confidence=0.9):
+        print("Failed to see the \"warping\" indicator")
 
     # Delay for ship to warp to an asteroid
     is_warping_check = 0
