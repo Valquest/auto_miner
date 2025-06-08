@@ -21,7 +21,7 @@ def mine(retriever=False)-> None:
     mouse_action(imgs.warp_btn, "click", offset_x=round(random.randint(1, 60)), 
               offset_y=round(random.randint(1, 3)))
 
-    warp()
+    warp_rest_timer()
 
     # Locate asteroid to mine again (in case it was not marked the first time 
     # as targeting only works if is marked in Overview window)
@@ -34,7 +34,7 @@ def mine(retriever=False)-> None:
 
     mouse_action(imgs.warp_btn, "click")
 
-    warp()
+    warp_rest_timer()
 
 def random_movement(points:int=1)-> None:
     """
@@ -187,27 +187,39 @@ def mining_lasers_on():
     time.sleep(1)
     pyautogui.press("f2")
 
-def locate_indicators(indicator_img, confidence=0.90)->bool:
+def locate_indicators(indicator_img, confidence=0.90, orbit=True, retries=6, wait_for_absence=False)->bool:
     """
     Attempts to find provided vissual indicator. Orbits arround the ship to have more success
     when looking for
     """
     times_found = 0
-    enter_tactical_cam_view()
+    total_atempts = 0
+    if orbit:
+        enter_tactical_cam_view()
 
-    while times_found < 2:
+    while times_found < 2 and total_atempts < retries:
         try:
             pyautogui.locateOnScreen(indicator_img, confidence=confidence)
             times_found += 1
-            if times_found == 2:
-                enter_orbit_cam_view()
+            if times_found == 2 and not wait_for_absence:
+                if orbit:
+                    enter_orbit_cam_view()
                 print("Found target")
                 return True
+            elif wait_for_absence:
+                times_found = 0
         except:
-            orbit_screen_once()
+            if wait_for_absence:
+                print("Target no longer present")
+                return True
+            if orbit:
+                orbit_screen_once()
             if times_found > 0:
                 times_found -= 1
-    enter_orbit_cam_view()
+            total_atempts += 1
+
+    if orbit:            
+        enter_orbit_cam_view()
     print("Failed to find the target")
     return False
 
@@ -234,34 +246,20 @@ def enter_orbit_cam_view():
     pyautogui.press("2")
     pyautogui.keyUp("alt")
 
-def warp()-> None:
+def warp_rest_timer(handle_drones=True)-> None:
     """
     Manages warping rest time. Rests while warp. Solves issue with fixed warp time, where
     ship would wait till general time.sleep would end for short warps
     """
-    WARP_TIME = 40
-    warp_ended_approval = 0
-
     # Retrieve drones before warping if possible
-    drone.retrieve_drones()
+    if handle_drones:
+        drone.retrieve_drones()
 
     if not locate_indicators(imgs.warping_text, confidence=0.9):
         print("Failed to see the \"warping\" indicator")
 
-    # Delay for ship to warp to an asteroid
-    is_warping_check = 0
-
-    while is_warping_check < WARP_TIME:
-        try:
-            warping = pyautogui.locateOnScreen(imgs.warping_text, confidence=0.75)    
-            if warping:
-                continue
-        except:
-            time.sleep(1)
-            is_warping_check += 1
-            warp_ended_approval += 1
-            if warp_ended_approval == 3:
-                break
+    while not locate_indicators(imgs.warping_text, confidence=0.9):
+        print("Warping")
 
     time.sleep(5)
 

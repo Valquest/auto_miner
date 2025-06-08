@@ -9,25 +9,28 @@ imgs = image_loader.Image_loader()
 time.sleep(2)
 
 target = imgs.warping_text
+drone = drones.Drones()
 
-def find_indicator(indicator_img, confidence=0.90)->bool:
-    times_found = 0
-    ore_finder.enter_tactical_cam_view()
+def warp_rest_timer(handle_drones=True)-> None:
+    """
+    Manages warping rest time. Rests while warp. Solves issue with fixed warp time, where
+    ship would wait till general time.sleep would end for short warps
+    """
+    # Retrieve drones before warping if possible
+    if handle_drones:
+        drone.retrieve_drones()
 
-    while times_found < 2:
-        try:
-            pyautogui.locateOnScreen(indicator_img, confidence=confidence)
-            times_found += 1
-            if times_found == 2:
-                ore_finder.enter_orbit_cam_view()
-                print("Found target")
-                return True
-        except:
-            ore_finder.orbit_screen_once()
-            if times_found > 0:
-                times_found -= 1
-    ore_finder.enter_orbit_cam_view()
-    print("Failed to find the target")
-    return False
+    ore_finder.locate_indicators(imgs.warping_text, confidence=0.9)
+
+    time.sleep(2)
+    print("Warping")
+
+    ore_finder.locate_indicators(imgs.warping_text, confidence=0.9, orbit=False, retries=30, wait_for_absence=True)
         
-find_indicator(target)
+    print("Arriving to your destination")
+
+    time.sleep(5)
+
+    print("Warping completed")
+
+warp_rest_timer()

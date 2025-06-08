@@ -1,7 +1,7 @@
 from datetime import datetime, time as Time
 import random
 import pyautogui
-from automations.ore_finder import mining_lasers_off, mouse_action, wait_for_end_of_warp
+from automations.ore_finder import mining_lasers_off, mouse_action, warp_rest_timer
 from config import config
 import time
 from assets.image_loader import Image_loader
@@ -142,7 +142,7 @@ class Idler():
                 print("Could not click neither \"Claim gift\" nor login buttons")
 
         # Check if warping and wait until warping ends
-        wait_for_end_of_warp()
+        warp_rest_timer(handle_drones=False)
 
     def claim_daily_gift(self)->None:
         # Try claiming gift. If not possible, try closing the gift window
