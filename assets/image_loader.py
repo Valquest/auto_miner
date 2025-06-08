@@ -52,6 +52,12 @@ class Image_loader():
         self.warping_text = self.ore_finder_path + "warping.png"
         self.mining_completed_img = self.ore_finder_path + "mining_completed.png"
         self.mining_completed_retriever_img = self.ore_finder_path + "mining_completed_retriever.png"
+        self.asteroid_depleted_img = self.ore_finder_path + "depleted.png"
+        self.mining_in_progress_img = self.ore_finder_path + "in_mining_process.png"
+        self.target_image_bigger = self.ore_finder_path + "Target_Locked_In_Bigger.png"
+        self.target_image_smaller = self.ore_finder_path + "Target_Locked_In_Smaller.png"
+        self.too_far_to_mine_img = self.ore_finder_path + "strip_miner_too_far.png"
+        self.mining_laser = self.ore_finder_path + "mining_laser_starting_point.png"
 
         # Defining resting directory image paths
         self.eve_launcher_btn = self.resting_path + "eve_icon.png"

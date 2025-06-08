@@ -94,7 +94,6 @@ def mine_in_asteroid_belt(retriever=False)-> None:
     mining_corretly = False
     timer = 0
     asteroid_depleted = False
-    asteroid_depleted_img_path = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\depleted.png"
     while timer < 1800: #865 for Venturer, 1800 for Retriever
         if asteroid_depleted:
 
@@ -110,7 +109,7 @@ def mine_in_asteroid_belt(retriever=False)-> None:
 
             asteroid_depleted = False
         try:
-            coords = pyautogui.locateCenterOnScreen(asteroid_depleted_img_path, confidence=0.7)
+            coords = pyautogui.locateCenterOnScreen(imgs.asteroid_depleted_img, confidence=0.7)
             if coords:  # If image is found
                 asteroid_depleted = True
                 coords = None
@@ -122,8 +121,7 @@ def mine_in_asteroid_belt(retriever=False)-> None:
         if not mining_corretly:
             try:
                 time.sleep(5)
-                mining_in_progress_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\in_mining_process.png"
-                mining_correctly = pyautogui.locateOnScreen(mining_in_progress_img, confidence=0.7)
+                mining_correctly = pyautogui.locateOnScreen(imgs.mining_in_progress_img, confidence=0.7)
                 if mining_correctly:
                     mining_corretly = True
                     pass
@@ -209,8 +207,6 @@ def warp()-> None:
     # Retrieve drones before warping if possible
     drone.retrieve_drones()
 
-    imgs.warping_text = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\imgs.warping_text.png"
-
     wait_for_end_of_warp()
 
     # Delay for ship to warp to an asteroid
@@ -245,20 +241,16 @@ def traveling(retriever=False)-> None:
     # Initial wait before flying speed is appearing on the screen
     time.sleep(10)
 
-    target_image_bigger = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Target_Locked_In_Bigger.png"
-    target_image_smaller = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\Target_Locked_In_Smaller.png"
-    too_far_to_mine_img = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\strip_miner_too_far.png"
-
     while counter < approach_time:
         try:
             print("looking for target marks")
-            targeted = pyautogui.locateOnScreen(target_image_bigger, confidence=0.90)
+            targeted = pyautogui.locateOnScreen(imgs.target_image_bigger, confidence=0.90)
             if targeted:
                 print("found target mark")
                 break
         except:
             try:
-                target = pyautogui.locateOnScreen(target_image_smaller, confidence=0.90)
+                target = pyautogui.locateOnScreen(imgs.target_image_smaller, confidence=0.90)
                 if target:
                     print("found target mark")
                     break
@@ -272,7 +264,7 @@ def traveling(retriever=False)-> None:
         try:
             pyautogui.press('f1')
             time.sleep(2)
-            target = pyautogui.locateOnScreen(too_far_to_mine_img, confidence=0.80)
+            target = pyautogui.locateOnScreen(imgs.too_far_to_mine_img, confidence=0.80)
             if target:
                 time.sleep(15)
                 counter += 1
@@ -283,21 +275,16 @@ def traveling(retriever=False)-> None:
     print("Next asteroid is in reach")
 
 def mining_lasers_off():
-    # pyautogui.press("f1")
-    # time.sleep(1)
-    # pyautogui.press("f2")
-    # time.sleep(15)
 
-    mining_laser = f"{config.root_path}\\auto_miner\\screenshots\\ore_finder\\mining_laser_starting_point.png"
     x = -100
     y = 50
 
     while True:
         try:
             print("Clicking lasers")
-            mouse_action(mining_laser, "click", rand_moves=0, offset_x=x, offset_y=y)
+            mouse_action(imgs.mining_laser, "click", rand_moves=0, offset_x=x, offset_y=y)
             time.sleep(1)
-            mouse_action(mining_laser, "click", rand_moves=0, offset_x=x, offset_y=y)
+            mouse_action(imgs.mining_laser, "click", rand_moves=0, offset_x=x, offset_y=y)
             print("Clicked lasers")
             break
         except:
